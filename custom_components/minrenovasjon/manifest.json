@@ -1,6 +1,7 @@
 {
   "domain": "minrenovasjon",
   "name": "MinRenovasjon",
+  "version": "0.0.1",
   "codeowners": [
     "@giaever-online-iot"
   ],
@@ -9,7 +10,9 @@
   "documentation": "https://www.home-assistant.io/integrations/minrenovasjon",
   "homekit": {},
   "iot_class": "cloud_polling",
-  "requirements": [],
+  "requirements": [
+    ""
+  ],
   "ssdp": [],
   "zeroconf": []
 }
