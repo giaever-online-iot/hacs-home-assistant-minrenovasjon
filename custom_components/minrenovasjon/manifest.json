@@ -7,7 +7,7 @@
   ],
   "config_flow": true,
   "dependencies": [],
-  "documentation": "https://www.home-assistant.io/integrations/minrenovasjon",
+  "documentation": "https://github.com/giaever-online-iot/hacs-home-assistant-minrenovasjon/blob/main/README.md",
   "homekit": {},
   "iot_class": "cloud_polling",
   "requirements": ["aiohttp"],
