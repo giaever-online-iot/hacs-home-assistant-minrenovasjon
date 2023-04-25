@@ -1,0 +1,4 @@
+[submodule "minrenovasjon"]
+	path = custom_components/minrenovasjon
+	url = git@github.com:giaever-online-iot/home-assistant-minrenovasjon.git
+	fetchRecurseSubmodules = true
