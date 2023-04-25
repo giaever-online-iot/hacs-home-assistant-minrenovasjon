@@ -14,9 +14,17 @@
         "data": {
           "select_address": "Select address"
         }
+      },
+      "select_fractions": {
+        "title": "Select fractions",
+        "description": "You can select multiple fractions. Leave empty to select all fractions at once.",
+        "data": {
+          "select_fractions": "Select fraction(s)"
+        }
       }
     },
     "error": {
+      "already_configured": "[%key:common::config_flow::abort::already_configured_service%]",
       "cannot_connect": "[%key:common::config_flow::error::cannot_connect%]",
       "select_one_address": "Select (exact) one address",
       "invalid_address": "Invalid address or not found in MinRenovasjon",

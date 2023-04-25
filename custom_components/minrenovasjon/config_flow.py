@@ -111,8 +111,6 @@ class ConfigFlow(config_entries.ConfigFlow, domain=const.DOMAIN):
     ) -> FlowResult:
         errors: dict[str, str] = {}
 
-        _LOGGER.info("HELLO FROM minren")
-
         if user_input is not None:
             try:
                 self.__addresses = await get_addresses(
@@ -151,18 +149,24 @@ class ConfigFlow(config_entries.ConfigFlow, domain=const.DOMAIN):
                 errors["base"] = "select_one_address"
             else:
                 _address = self.__addresses[address_index]
-                _LOGGER.debug(
-                    "Found address(es) with the selected address: %s", _address
-                )
+                _LOGGER.debug("Found address with the selected address: %s", _address)
 
-                self.__selections.update({"address": _address})
+                for entry in self.hass.config_entries.async_entries(const.DOMAIN):
+                    if entry.data.get("address") == _address:
+                        errors["base"] = "already_configured"
+                        break
 
-                return await self.async_step_select_fractions()
+                if "base" not in errors:
+                    self.__selections.update({"address": _address})
+                    return await self.async_step_select_fractions()
 
         address_options = [
             {
                 "value": str(self.__addresses.index(addr)),
-                "label": addr.get("adressetekst", "-unknown-"),
+                "label": "{}, {}".format(
+                    addr.get("adressetekst", "-unknown-"),
+                    addr.get("kommunenavn", "-unknown-").lower().title(),
+                ),
             }
             for addr in self.__addresses
         ]
@@ -198,7 +202,6 @@ class ConfigFlow(config_entries.ConfigFlow, domain=const.DOMAIN):
 
             if fractions is not None:
                 selected_fractions = fractions.get("select_fractions")
-                _LOGGER.debug("SELECTED %s", selected_fractions)
 
                 if selected_fractions is None or len(selected_fractions) == 0:
                     selected_fractions = [
