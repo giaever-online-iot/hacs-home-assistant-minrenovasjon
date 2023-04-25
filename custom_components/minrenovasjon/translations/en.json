@@ -1,0 +1,31 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Device is already configured"
+        },
+        "error": {
+            "cannot_connect": "Failed to connect",
+            "empty_addr_list": "Address list is empty",
+            "fractions_not_found": "Fractions not found for given address/municipality.",
+            "invalid_address": "Invalid address or not found in MinRenovasjon",
+            "select_one_address": "Select (exact) one address",
+            "unknown": "Unexpected error"
+        },
+        "step": {
+            "select_address": {
+                "data": {
+                    "select_address": "Select address"
+                },
+                "description": "The list of entries might be limited if you didn't specify your house number and/or letter.",
+                "title": "Select street address and number"
+            },
+            "user": {
+                "data": {
+                    "street_address": "Street address"
+                },
+                "description": "Include house- number and letter (if applicable) to narrow the search results. The entries in the result is automatically limited by the API.",
+                "title": "Select street address and number"
+            }
+        }
+    }
+}

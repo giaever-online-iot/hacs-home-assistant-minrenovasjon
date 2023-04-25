@@ -1,0 +1,31 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Select street address and number",
+        "description": "Include house- number and letter (if applicable) to narrow the search results. The entries in the result is automatically limited by the API.",
+        "data": {
+          "street_address": "Street address"
+        }
+      },
+      "select_address": {
+        "title": "Select street address and number",
+        "description": "The list of entries might be limited if you didn't specify your house number and/or letter.",
+        "data": {
+          "select_address": "Select address"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "[%key:common::config_flow::error::cannot_connect%]",
+      "select_one_address": "Select (exact) one address",
+      "invalid_address": "Invalid address or not found in MinRenovasjon",
+      "fractions_not_found": "Fractions not found for given address/municipality.",
+      "empty_addr_list":  "Address list is empty",
+      "unknown": "[%key:common::config_flow::error::unknown%]"
+    },
+    "abort": {
+      "already_configured": "[%key:common::config_flow::abort::already_configured_device%]"
+    }
+  }
+}
