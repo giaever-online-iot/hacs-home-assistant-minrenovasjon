@@ -1,0 +1,3 @@
+[submodule "custom_components/minrenovasjon"]
+	path = custom_components/minrenovasjon
+	url = git@github.com:giaever-online-iot/home-assistant-minrenovasjon.git
