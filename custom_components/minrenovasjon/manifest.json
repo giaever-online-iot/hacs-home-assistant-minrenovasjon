@@ -10,9 +10,7 @@
   "documentation": "https://www.home-assistant.io/integrations/minrenovasjon",
   "homekit": {},
   "iot_class": "cloud_polling",
-  "requirements": [
-    ""
-  ],
+  "requirements": ["aiohttp],
   "ssdp": [],
   "zeroconf": []
 }
