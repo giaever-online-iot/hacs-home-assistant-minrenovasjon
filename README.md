@@ -1,7 +1,7 @@
 # MinRenovasjon
 MinRenovasjon offer a calendar and binary sensors (for each fraction) for a given address in Home Assistant. It supperts multiple setups, for multiple addresses.
 
-[Kooha-2023-04-25-18-45-44](https://user-images.githubusercontent.com/7188121/234346833-ac5c5d48-a36d-4097-bfd0-d83358ee1ef7.gif)
+![Kooha-2023-04-25-18-45-44](https://user-images.githubusercontent.com/7188121/234346833-ac5c5d48-a36d-4097-bfd0-d83358ee1ef7.gif)
 
 ## Installation
 
