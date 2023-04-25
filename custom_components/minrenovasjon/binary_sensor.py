@@ -62,7 +62,7 @@ class MinRenovasjonBinarySensor(BinarySensorEntity):
             "icon": "mdi:{}".format(
                 "trash-can" if self.get_on_event is None else "delete-restore",
             ),
-            "icon-url": self.__fraction.get("icon"),
+            "icon_url": self.__fraction.get("icon"),
         }
 
         if self.__events is not None and len(self.__events) != 0:
