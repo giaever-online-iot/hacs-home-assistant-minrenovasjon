@@ -94,11 +94,17 @@ class MinRenovasjonApi:
         async with session.get(
             url, headers=headers, timeout=aiohttp.ClientTimeout(total=60)
         ) as req:
+            req.raise_for_status()
+
             try:
                 res = await req.json()
             except Exception as err:
                 _LOGGER.exception(err)
-                raise CannotConnect("Cannot connect") from err
+                raise CannotConnect(
+                    "Cannot connect: {}, selector={} headers={}".format(
+                        url, selector, headers
+                    )
+                ) from err
             else:
                 if selector:
                     if selector not in res:

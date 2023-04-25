@@ -105,6 +105,7 @@ class ConfigFlow(config_entries.ConfigFlow, domain=const.DOMAIN):
             "address": None,
             "fractions": None,
         }
+        self.__fractions: list[dict[str, str]] = []
 
     async def async_step_user(
         self, user_input: dict[str, Any] | None = None
@@ -158,7 +159,15 @@ class ConfigFlow(config_entries.ConfigFlow, domain=const.DOMAIN):
 
                 if "base" not in errors:
                     self.__selections.update({"address": _address})
-                    return await self.async_step_select_fractions()
+
+                    self.__fractions = await get_fractions_for_address(
+                        self.hass, _address
+                    )
+
+                    if len(self.__fractions) == 0:
+                        errors["base"] = "no_fractions_for_address"
+                    else:
+                        return await self.async_step_select_fractions()
 
         address_options = [
             {
@@ -193,11 +202,9 @@ class ConfigFlow(config_entries.ConfigFlow, domain=const.DOMAIN):
 
         fraction_options = []
         try:
-            _fractions = await get_fractions_for_address(self.hass, address)
-
             fraction_options = [
                 {"value": str(fraction.get("Id")), "label": fraction.get("Navn")}
-                for fraction in _fractions
+                for fraction in self.__fractions
             ]
 
             if fractions is not None:
@@ -220,7 +227,7 @@ class ConfigFlow(config_entries.ConfigFlow, domain=const.DOMAIN):
                         "type": fraction.get("Navn", "Unknown"),
                         "icon": fraction.get("Ikon", None),
                     }
-                    for fraction in _fractions
+                    for fraction in self.__fractions
                     if fraction.get("Id") in selected_fractions
                 ]
 
