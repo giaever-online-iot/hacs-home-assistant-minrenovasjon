@@ -1,5 +1,7 @@
 # MinRenovasjon
-MinRenovasjon offers calendar and binary sensors for a given address in Home Assistant.
+MinRenovasjon offer a calendar and binary sensors (for each fraction) for a given address in Home Assistant. It supperts multiple setups, for multiple addresses.
+
+[Kooha-2023-04-25-18-45-44](https://user-images.githubusercontent.com/7188121/234346833-ac5c5d48-a36d-4097-bfd0-d83358ee1ef7.gif)
 
 ## Installation
 
@@ -8,11 +10,12 @@ MinRenovasjon offers calendar and binary sensors for a given address in Home Ass
 Copy the repository URL (`git@github.com:giaever-online-iot/hacs-home-assistant-minrenovasjon.git`) and add it as a custom repository in HACS.
 1. Go into HACS
 2. Click the three dots in the upper right corner
-2.1 Select «Custom repositories» and paste the URL into the repository-field.
-2.2 Select «Integration» as the category
-2.3 Press «Add»
+  - Select «Custom repositories» and paste the URL into the repository-field.
+  - Select «Integration» as the category
+  - Press «Add»
+
 3. It should now show up under integration tab, flagged as a «New repository».
-3.1 Click this badge and select «Download»
+4. Click this badge and select «Download»
 
 If the badge didn't show up or you accidentally dismissed it, you should find it by pressing the «+ Explore and download» button in the lower right corner. Search for «MinRenovasjon».
 
@@ -25,4 +28,4 @@ Note! This integration do not support YAML-configuration.
 
 1. Go into settings on your Home Assistant instance.
 2. Select «Devices & Services» and click the «+ Add integration» button in the lower right corner.
-3. Search for «MinRenovasjon» and follow the on-screen steps.
+3. Search for «MinRenovasjon» and follow the on-screen steps.!
