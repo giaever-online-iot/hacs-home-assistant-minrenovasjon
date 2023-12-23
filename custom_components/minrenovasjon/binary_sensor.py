@@ -27,7 +27,6 @@ async def async_setup_entry(
 ) -> None:
     """Docstring"""
     api: MinRenovasjonApi | None = hass.data[const.DOMAIN][config_entry.entry_id]
-    _LOGGER.debug("Setup calendar entry, found API: %s", api is not None)
 
     if api is None:
         _LOGGER.error("Missing API class")
@@ -63,7 +62,7 @@ class MinRenovasjonBinarySensor(BinarySensorEntity):
             "icon": "mdi:{}".format(
                 "trash-can" if self.get_on_event is None else "delete-restore",
             ),
-            "icon-url": self.__fraction.get("icon"),
+            "icon_url": self.__fraction.get("icon"),
         }
 
         if self.__events is not None and len(self.__events) != 0:
@@ -72,7 +71,6 @@ class MinRenovasjonBinarySensor(BinarySensorEntity):
         if orig is not None:
             attr.update(orig)
 
-        _LOGGER.debug("STATE ATTR: %s", attr)
         return attr
 
     @property
@@ -105,7 +103,6 @@ class MinRenovasjonBinarySensor(BinarySensorEntity):
             self.__api.build_calendar_url_from_address(self.__address)
         ):
             for fraction in result:
-                _LOGGER.debug("Have fraction %s", fraction)
                 if int(fraction.get("FraksjonId", -1)) == self.__fraction.get("id"):
                     self.__events = [
                         dt.start_of_local_day(
@@ -115,6 +112,6 @@ class MinRenovasjonBinarySensor(BinarySensorEntity):
                     ]
         else:
             _LOGGER.debug(
-                "Calendar not updated yet, waiting for refresh for address: %s",
+                "Calendar entity not updated yet, waiting for refresh for address: %s",
                 self.__address.get("adressetekst"),
             )

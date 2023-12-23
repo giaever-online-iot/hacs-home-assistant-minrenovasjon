@@ -22,7 +22,6 @@ async def async_setup_entry(
     async_add_entities,
 ) -> None:
     api: MinRenovasjonApi | None = hass.data[const.DOMAIN][config_entry.entry_id]
-    _LOGGER.debug("Setup calendar entry, found API: %s", api is not None)
 
     if api is None:
         _LOGGER.error("Missing API class")
@@ -68,12 +67,6 @@ class MinRenovasjonCalendar(CalendarEntity):
     async def async_get_events(
         self, hass: core.HomeAssistant, start_date: datetime, end_date: datetime
     ) -> list[CalendarEvent]:
-        _LOGGER.debug(
-            "async_get_events: Get events from %s until %s",
-            start_date.strftime("%d-%m-%Y"),
-            end_date.strftime("%d-%m-%Y"),
-        )
-
         _events = []
 
         for event in self.__events:
@@ -82,12 +75,10 @@ class MinRenovasjonCalendar(CalendarEntity):
             elif end_date.date() >= event.end >= start_date.date():
                 _events.append(event)
 
-        _LOGGER.debug("Returning events: %s", _events)
         return _events
 
     async def async_update(self) -> None:
         """Docstring"""
-        _LOGGER.debug("Fetch events")
 
         try:
             events = await self.__api.query(
@@ -100,7 +91,7 @@ class MinRenovasjonCalendar(CalendarEntity):
         except Exception as err:
             _LOGGER.exception(err)
         else:
-            _LOGGER.debug("Trash collection: %s", events)
+            self.__event_copy = self.__events
             self.__events = []
             for collection in events:
                 fraction_id = int(collection.get("FraksjonId", -1))
@@ -108,12 +99,6 @@ class MinRenovasjonCalendar(CalendarEntity):
                 for fraction in self.__fractions:
                     if fraction.get("id") == fraction_id:
                         dates = collection.get("Tommedatoer", None)
-                        _LOGGER.debug(
-                            "Fraction ID: %d == %d, dates=%s",
-                            fraction_id,
-                            fraction.get("id"),
-                            dates,
-                        )
 
                         for date in dates:
                             start = dt.start_of_local_day(
@@ -129,7 +114,9 @@ class MinRenovasjonCalendar(CalendarEntity):
                             )
 
                         self.__sort_by_start()
-            _LOGGER.debug("Events: %s", self.__events)
+
+                if self.__events != self.__event_copy:
+                    _LOGGER.debug("Events: %s", self.__events)
 
     def __sort_by_start(self) -> None:
         self.__events.sort(key=lambda x: x.start)

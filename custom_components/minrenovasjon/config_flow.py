@@ -105,13 +105,12 @@ class ConfigFlow(config_entries.ConfigFlow, domain=const.DOMAIN):
             "address": None,
             "fractions": None,
         }
+        self.__fractions: list[dict[str, str]] = []
 
     async def async_step_user(
         self, user_input: dict[str, Any] | None = None
     ) -> FlowResult:
         errors: dict[str, str] = {}
-
-        _LOGGER.info("HELLO FROM minren")
 
         if user_input is not None:
             try:
@@ -151,18 +150,32 @@ class ConfigFlow(config_entries.ConfigFlow, domain=const.DOMAIN):
                 errors["base"] = "select_one_address"
             else:
                 _address = self.__addresses[address_index]
-                _LOGGER.debug(
-                    "Found address(es) with the selected address: %s", _address
-                )
+                _LOGGER.debug("Found address with the selected address: %s", _address)
 
-                self.__selections.update({"address": _address})
+                for entry in self.hass.config_entries.async_entries(const.DOMAIN):
+                    if entry.data.get("address") == _address:
+                        errors["base"] = "already_configured"
+                        break
 
-                return await self.async_step_select_fractions()
+                if "base" not in errors:
+                    self.__selections.update({"address": _address})
+
+                    self.__fractions = await get_fractions_for_address(
+                        self.hass, _address
+                    )
+
+                    if len(self.__fractions) == 0:
+                        errors["base"] = "no_fractions_for_address"
+                    else:
+                        return await self.async_step_select_fractions()
 
         address_options = [
             {
                 "value": str(self.__addresses.index(addr)),
-                "label": addr.get("adressetekst", "-unknown-"),
+                "label": "{}, {}".format(
+                    addr.get("adressetekst", "-unknown-"),
+                    addr.get("kommunenavn", "-unknown-").lower().title(),
+                ),
             }
             for addr in self.__addresses
         ]
@@ -189,16 +202,13 @@ class ConfigFlow(config_entries.ConfigFlow, domain=const.DOMAIN):
 
         fraction_options = []
         try:
-            _fractions = await get_fractions_for_address(self.hass, address)
-
             fraction_options = [
                 {"value": str(fraction.get("Id")), "label": fraction.get("Navn")}
-                for fraction in _fractions
+                for fraction in self.__fractions
             ]
 
             if fractions is not None:
                 selected_fractions = fractions.get("select_fractions")
-                _LOGGER.debug("SELECTED %s", selected_fractions)
 
                 if selected_fractions is None or len(selected_fractions) == 0:
                     selected_fractions = [
@@ -217,7 +227,7 @@ class ConfigFlow(config_entries.ConfigFlow, domain=const.DOMAIN):
                         "type": fraction.get("Navn", "Unknown"),
                         "icon": fraction.get("Ikon", None),
                     }
-                    for fraction in _fractions
+                    for fraction in self.__fractions
                     if fraction.get("Id") in selected_fractions
                 ]
 
