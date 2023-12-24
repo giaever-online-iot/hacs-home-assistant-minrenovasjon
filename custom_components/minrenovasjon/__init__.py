@@ -95,7 +95,7 @@ class MinRenovasjonApi:
         if url.startswith('https://komteksky'):
             url = urllib.parse.urlparse(const.URL_PROXY)._replace(query=urllib.parse.urlencode({
                 'server': urllib.parse.quote(url)
-            }))
+            })).geturl()
 
         async with session.get(
             url, headers=headers, timeout=aiohttp.ClientTimeout(total=60)
