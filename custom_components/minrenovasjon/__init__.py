@@ -4,13 +4,14 @@ from __future__ import annotations
 import logging
 import urllib.parse
 
+from . import const
 from typing import Any, Literal, cast
+from .exceptions import CannotConnect, InvalidParameters
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
-
-from . import const
+import aiohttp
 
 # TODO List the platforms that you want to support.
 # For your initial PR, limit it to 1 platform.
@@ -38,12 +39,6 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         hass.data[const.DOMAIN].pop(entry.entry_id)
 
     return unload_ok
-
-
-from homeassistant.helpers.aiohttp_client import async_get_clientsession
-from .exceptions import CannotConnect, InvalidParameters
-import aiohttp
-
 
 class MinRenovasjonApi:
     def __init__(self, hass: HomeAssistant):
@@ -90,37 +85,37 @@ class MinRenovasjonApi:
     async def query(
         self, url: str, headers: dict[str, Any] = {}, selector: str | None = None
     ):
-        session = async_get_clientsession(self.__hass)
+
+        params={}
 
         if url.startswith('https://komteksky'):
-            url = urllib.parse.urlparse(const.URL_PROXY)._replace(query=urllib.parse.urlencode({
-                'server': urllib.parse.quote(url)
-            })).geturl()
+            params={
+                'server': url
+            }
+            url = const.URL_PROXY 
 
-        async with session.get(
-            url, headers=headers, timeout=aiohttp.ClientTimeout(total=60)
-        ) as req:
-            req.raise_for_status()
+        _LOGGER.debug("URL: %s, params=%s, header=%s", url, str(params), str(headers))
 
-            try:
-                res = await req.json()
-            except Exception as err:
-                _LOGGER.exception(err)
-                raise CannotConnect(
-                    "Cannot connect: {}, selector={} headers={}".format(
-                        url, selector, headers
-                    )
-                ) from err
-            else:
-                if selector:
-                    if selector not in res:
-                        raise InvalidParameters(
-                            "Missing selector={} in res ({})".format(selector, res)
+        async with aiohttp.ClientSession(headers=headers) as session:
+            async with session.get(url=url, params=params) as req:
+                try:
+                    res = await req.json(encoding="UTF-8", content_type="text/html")
+                except Exception as err:
+                    raise CannotConnect(
+                        "Cannot connect: {}, selector={} headers={}".format(
+                            url, selector, headers
                         )
+                    ) from err
+                else:
+                    if selector:
+                        if selector not in res:
+                            raise InvalidParameters(
+                                "Missing selector={} in res ({})".format(selector, res)
+                            )
 
-                    res = res.get(selector)
+                        res = res.get(selector)
 
-                _LOGGER.debug("URL: %s, returned: %s", url, res)
+                    _LOGGER.debug("URL: %s, returned: %s", url, res)
 
-                self.__queries[url] = res
-                return res
+                    self.__queries[url] = res
+                    return res
