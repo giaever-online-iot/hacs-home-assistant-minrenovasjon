@@ -93,7 +93,9 @@ class MinRenovasjonApi:
         session = async_get_clientsession(self.__hass)
 
         if url.startswith('https://komteksky'):
-            url = urllib.parse.quote(url)
+            url = const.URL_PROXY.format(urllib.parse.quote(url))
+
+        _LOGGER.info("URL:%s", url)
 
         async with session.get(
             url, headers=headers, timeout=aiohttp.ClientTimeout(total=60)
