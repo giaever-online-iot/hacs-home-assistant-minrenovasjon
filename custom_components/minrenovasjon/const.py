@@ -9,7 +9,7 @@ APP_KEY_VALUE = "AE13DEEC-804F-4615-A74E-B4FAC11F0A30"
 
 DATE_FORMAT = "%Y-%m-%dT%H:%M:%S"
 
-URL_PROXY = 'https://norkartrenovasjon.azurewebsites.net/proxyserver.ashx?server={}'
+URL_PROXY = 'https://norkartrenovasjon.azurewebsites.net/proxyserver.ashx'
 URL_FRACTIONS = "https://komteksky.norkart.no/MinRenovasjon.Api/api/fraksjoner"
 URL_CALENDAR = "https://komteksky.norkart.no/MinRenovasjon.Api/api/tommekalender/"
 URL_CALENDAR_STREET_NAME = {"gatenavn": "{}"}
