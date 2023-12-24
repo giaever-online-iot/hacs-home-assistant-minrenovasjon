@@ -91,6 +91,10 @@ class MinRenovasjonApi:
         self, url: str, headers: dict[str, Any] = {}, selector: str | None = None
     ):
         session = async_get_clientsession(self.__hass)
+
+        if url.startswith('https://komteksky'):
+            url = urllib.parse.quote(url)
+
         async with session.get(
             url, headers=headers, timeout=aiohttp.ClientTimeout(total=60)
         ) as req:
